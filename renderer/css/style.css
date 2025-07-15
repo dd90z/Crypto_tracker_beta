@@ -1,0 +1,6 @@
+.coin-logo { width: 24px; height: 24px; margin-right: 10px; }
+.price-up { color: #198754; }
+.price-down { color: #dc3545; }
+.dropdown-menu-end { right: 0; left: auto; }
+.alarm-history-item { opacity: 0.7; }
+.currency-dropdown-menu { transform: translateX(-20px); /* Adjust as needed */ }

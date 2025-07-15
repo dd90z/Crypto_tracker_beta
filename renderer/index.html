@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Tracker</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+</head>
+<body class="bg-dark text-light">
+
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-currency-bitcoin"></i>
+                Crypto Tracker
+            </a>
+            <div class="d-flex align-items-center">
+                <div class="dropdown me-2">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="currencyDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span id="selected-currency">USD</span>
+                    </button>
+                    <ul class="dropdown-menu currency-dropdown-menu" aria-labelledby="currencyDropdown">
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="usd">USD - United States Dollar</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="eur">EUR - Euro</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="jpy">JPY - Japanese Yen</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="gbp">GBP - British Pound</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="aud">AUD - Australian Dollar</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="cad">CAD - Canadian Dollar</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="chf">CHF - Swiss Franc</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="cny">CNY - Chinese Yuan</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="sek">SEK - Swedish Krona</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="nzd">NZD - New Zealand Dollar</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="mxn">MXN - Mexican Peso</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="sgd">SGD - Singapore Dollar</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="hkd">HKD - Hong Kong Dollar</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="nok">NOK - Norwegian Krone</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="krw">KRW - South Korean Won</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="try">TRY - Turkish Lira</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="rub">RUB - Russian Ruble</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="inr">INR - Indian Rupee</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="brl">BRL - Brazilian Real</a></li>
+                        <li><a class="dropdown-item currency-select-item" href="#" data-currency="zar">ZAR - South African Rand</a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-dark me-2" type="button" id="coingeckoApiKeyBtn" data-bs-toggle="modal" data-bs-target="#coingeckoApiKeyModal">
+                    <i class="bi bi-key-fill"></i> API Key
+                </button>
+                <button class="btn btn-dark me-2" type="button" id="mailSettingsBtn" data-bs-toggle="modal" data-bs-target="#mailSettingsModal">
+                    <i class="bi bi-envelope-fill"></i> Mail Settings
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-dark position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-bell-fill"></i>
+                        <span id="alarm-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end p-2" style="width: 350px;" id="alarm-dropdown">
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <form id="search-form">
+                    <div class="input-group">
+                        <input type="text" id="search-input" class="form-control" placeholder="Search for a coin (e.g., cardano)">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary top-coins-btn" data-count="10">Top 10</button>
+                    <button type="button" class="btn btn-outline-secondary top-coins-btn" data-count="25">Top 25</button>
+                    <button type="button" class="btn btn-outline-secondary top-coins-btn" data-count="50">Top 50</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="coin-list" class="list-group">
+           <div class="text-center p-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="alarmModal" tabindex="-1" aria-labelledby="alarmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="alarmModalLabel">Set Price Alarm for <span id="modal-coin-name"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Current Price: <strong id="modal-current-price"></strong></p>
+                    <input type="hidden" id="modal-coin-id">
+                    <input type="hidden" id="modal-coin-current-price-val">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Alert me if price goes</span>
+                        <select class="form-select" id="alarm-type">
+                            <option value="up">UP by</option>
+                            <option value="down">DOWN by</option>
+                        </select>
+                        <input type="number" class="form-control" id="alarm-percentage" value="5" min="0.1" step="0.1">
+                        <span class="input-group-text">%</span>
+                    </div>
+                    <p class="text-center">Target Price: <strong id="modal-target-price"></strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="save-alarm-btn">Set Alarm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="./js/renderer.js"></script>
+
+    <!-- Mail Settings Modal -->
+    <div class="modal fade" id="mailSettingsModal" tabindex="-1" aria-labelledby="mailSettingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mailSettingsModalLabel">Mail Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="mail-settings-form">
+                        <div class="mb-3">
+                            <label for="mailService" class="form-label">Email Service (e.g., 'gmail', 'outlook', or SMTP host)</label>
+                            <input type="text" class="form-control" id="mailService" placeholder="gmail">
+                        </div>
+                        <div class="mb-3">
+                            <label for="mailUser" class="form-label">Your Email Address</label>
+                            <input type="email" class="form-control" id="mailUser" placeholder="your_email@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="mailPass" class="form-label">App Password / Email Password</label>
+                            <input type="password" class="form-control" id="mailPass" placeholder="Your App Password">
+                            <div class="form-text">For Gmail, you might need an <a href="https://support.google.com/accounts/answer/185833" target="_blank">App Password</a> if 2FA is enabled.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mailRecipient" class="form-label">Recipient Email Address (where alerts are sent)</label>
+                            <input type="email" class="form-control" id="mailRecipient" placeholder="recipient_email@example.com">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveMailSettingsBtn">Save Settings</button>
+                    <button type="button" class="btn btn-danger" id="clearMailSettingsBtn">Clear Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CoinGecko API Key Modal -->
+    <div class="modal fade" id="coingeckoApiKeyModal" tabindex="-1" aria-labelledby="coingeckoApiKeyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="coingeckoApiKeyModalLabel">CoinGecko API Key Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="coingecko-api-key-form">
+                        <div class="mb-3">
+                            <label for="coingeckoApiKeyInput" class="form-label">CoinGecko Demo API Key</label>
+                            <input type="password" class="form-control" id="coingeckoApiKeyInput" placeholder="Enter your CoinGecko Demo API Key">
+                            <div class="form-text">Get your free Demo API Key from <a href="https://www.coingecko.com/account/api" target="_blank">CoinGecko API Dashboard</a>.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveCoingeckoApiKeyBtn">Save Key</button>
+                    <button type="button" class="btn btn-danger" id="clearCoingeckoApiKeyBtn">Clear Key</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

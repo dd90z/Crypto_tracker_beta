@@ -1,0 +1,20 @@
+{
+  "name": "crypto_tracker_beta",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "electron app.js",
+    "postinstall": "sudo chown root:root node_modules/electron/dist/chrome-sandbox && sudo chmod 4755 node_modules/electron/dist/chrome-sandbox"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "bootstrap-icons": "^1.13.1",
+    "electron": "^37.1.0",
+    "electron-store": "^10.1.0",
+    "node-mailer": "^0.1.1"
+  }
+}
