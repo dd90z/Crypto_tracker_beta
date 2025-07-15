@@ -1,3 +1,5 @@
+### This is the App I am making for my Wifi Wien End Project but this is the version with user addable Demo API Key from CoinGecko but it works also whitout but limited
+
 # 📈 Crypto Price Tracker – Electron Desktop App
 
 A modular, extensible **desktop app** built with **Electron** + **Node.js** that allows users to track cryptocurrency prices from the [CoinGecko API](https://www.coingecko.com/en/api). The app provides real-time alerts via **desktop notifications** and fully configurable **email alerts**, using a customizable watchlist and supporting **multiple base currencies**.
