@@ -2,6 +2,7 @@
 <html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.coingecko.com;">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Tracker</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -50,6 +51,9 @@
                 </button>
                 <button class="btn btn-dark me-2" type="button" id="mailSettingsBtn" data-bs-toggle="modal" data-bs-target="#mailSettingsModal">
                     <i class="bi bi-envelope-fill"></i> Mail Settings
+                </button>
+                <button class="btn btn-dark me-2" type="button" id="sendTestNotificationBtn">
+                    <i class="bi bi-bell"></i> Test Notification
                 </button>
                 <div class="dropdown">
                     <button class="btn btn-dark position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -118,7 +122,7 @@
     </div>
 
     <script src="js/bootstrap.bundle.js"></script>
-    <script src="./js/renderer.js"></script>
+    <script type="module" src="./js/renderer.js"></script>
 
     <!-- Mail Settings Modal -->
     <div class="modal fade" id="mailSettingsModal" tabindex="-1" aria-labelledby="mailSettingsModalLabel" aria-hidden="true">
@@ -131,20 +135,46 @@
                 <div class="modal-body">
                     <form id="mail-settings-form">
                         <div class="mb-3">
-                            <label for="mailService" class="form-label">Email Service (e.g., 'gmail', 'outlook', or SMTP host)</label>
-                            <input type="text" class="form-control" id="mailService" placeholder="gmail">
+                            <label for="mailProvider" class="form-label">Email Provider</label>
+                            <select class="form-select" id="mailProvider">
+                                <option value="custom" selected>Custom SMTP</option>
+                                <option value="gmail">Gmail</option>
+                                <option value="outlook">Outlook</option>
+                                <option value="yahoo">Yahoo</option>
+                                <option value="icloud">iCloud</option>
+                            </select>
                         </div>
+                        <div id="customSmtpFields">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label for="mailHost" class="form-label">SMTP Host</label>
+                                        <input type="text" class="form-control" id="mailHost" placeholder="smtp.example.com">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="mailPort" class="form-label">Port</label>
+                                        <input type="number" class="form-control" id="mailPort" placeholder="587">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="mailSecure">
+                                <label class="form-check-label" for="mailSecure">Use Secure Connection (TLS)</label>
+                            </div>
+                        </div>
+                        <hr>
                         <div class="mb-3">
-                            <label for="mailUser" class="form-label">Your Email Address</label>
+                            <label for="mailUser" class="form-label">Your Email Address (Username)</label>
                             <input type="email" class="form-control" id="mailUser" placeholder="your_email@example.com">
                         </div>
                         <div class="mb-3">
                             <label for="mailPass" class="form-label">App Password / Email Password</label>
                             <input type="password" class="form-control" id="mailPass" placeholder="Your App Password">
-                            <div class="form-text">For Gmail, you might need an <a href="https://support.google.com/accounts/answer/185833" target="_blank">App Password</a> if 2FA is enabled.</div>
                         </div>
                         <div class="mb-3">
-                            <label for="mailRecipient" class="form-label">Recipient Email Address (where alerts are sent)</label>
+                            <label for="mailRecipient" class="form-label">Recipient Email Address</label>
                             <input type="email" class="form-control" id="mailRecipient" placeholder="recipient_email@example.com">
                         </div>
                     </form>
@@ -152,6 +182,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="saveMailSettingsBtn">Save Settings</button>
+                    <button type="button" class="btn btn-info" id="sendTestEmailBtn"><i class="bi bi-envelope-check-fill"></i> Send Test Email</button>
                     <button type="button" class="btn btn-danger" id="clearMailSettingsBtn">Clear Settings</button>
                 </div>
             </div>
@@ -183,5 +214,8 @@
             </div>
         </div>
     </div>
+
+    
+
 </body>
 </html>

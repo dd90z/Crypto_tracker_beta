@@ -14,6 +14,8 @@ contextBridge.exposeInMainWorld('api', {
     getMailSettings: () => ipcRenderer.invoke('get-mail-settings'),
     setMailSettings: (settings) => ipcRenderer.invoke('set-mail-settings', settings),
     clearMailSettings: () => ipcRenderer.invoke('clear-mail-settings'),
+    sendTestEmail: () => ipcRenderer.invoke('send-test-email'),
+    sendTestNotification: () => ipcRenderer.invoke('send-test-notification'),
     getCoingeckoApiKey: () => ipcRenderer.invoke('get-coingecko-api-key'),
     setCoingeckoApiKey: (key) => ipcRenderer.invoke('set-coingecko-api-key', key),
     clearCoingeckoApiKey: () => ipcRenderer.invoke('clear-coingecko-api-key'),
